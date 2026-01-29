@@ -4,6 +4,7 @@ import { AIProvider } from './context/AIContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ProductivityProvider } from './context/ProductivityContext';
 import { ToastProvider } from './context/ToastContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Layout from './components/layout/Layout';
 import LandingPage from './pages/LandingPage';
 import Onboarding from './pages/Onboarding';

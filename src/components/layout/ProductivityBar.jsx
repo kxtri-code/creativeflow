@@ -40,7 +40,7 @@ const ProductivityBar = () => {
         {/* Mobile Menu Button */}
         <button 
           onClick={onMenuClick}
-          className="lg:hidden p-2 -ml-2 text-slate-500 hover:bg-slate-100 rounded-lg"
+          className="lg:hidden p-3 -ml-2 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors"
         >
           <Menu size={24} />
         </button>
@@ -73,7 +73,7 @@ const ProductivityBar = () => {
           )}
         </div>
 
-        <div className="font-mono text-xl font-bold text-slate-700 w-24">
+        <div className="hidden lg:block font-mono text-xl font-bold text-slate-700 w-24">
           {formatTime(elapsedTime)}
         </div>
       </div>

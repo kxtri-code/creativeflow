@@ -97,7 +97,7 @@ const Dashboard = () => {
         </div>
         <button 
           onClick={handleRefresh}
-          className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm w-full md:w-auto justify-center"
+          className="flex items-center gap-2 px-4 py-3 md:py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm w-full md:w-auto justify-center"
         >
           <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
           Refresh Data

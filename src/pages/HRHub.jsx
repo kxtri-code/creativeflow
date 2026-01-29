@@ -38,30 +38,30 @@ const HRHub = () => {
   const canOnboard = profile?.role === 'admin' || profile?.role === 'hr';
 
   return (
-    <div className="h-[calc(100vh-8rem)] flex flex-col">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+    <div className="flex flex-col min-h-[calc(100vh-8rem)]">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-6">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">People & HR</h1>
           <p className="text-slate-500">Staff directory, payroll, and goal tracking.</p>
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           {canOnboard && (
             <button 
               onClick={handleOnboardClick}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-xl font-medium shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition-all flex-1 lg:flex-none whitespace-nowrap"
+              className="px-4 py-3 sm:py-2 bg-indigo-600 text-white rounded-xl font-medium shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition-all w-full sm:w-auto whitespace-nowrap flex justify-center"
             >
               Onboard Employee
             </button>
           )}
           <button 
             onClick={() => setIsLeaveModalOpen(true)}
-            className="px-4 py-2 border border-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-all flex-1 lg:flex-none whitespace-nowrap"
+            className="px-4 py-3 sm:py-2 border border-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-all w-full sm:w-auto whitespace-nowrap flex justify-center"
           >
             Apply for Leave
           </button>
           <button 
             onClick={() => setIsOrgChartOpen(true)}
-            className="px-4 py-2 bg-slate-900 text-white rounded-xl font-medium shadow-lg shadow-slate-900/20 hover:bg-slate-800 transition-all flex-1 lg:flex-none whitespace-nowrap"
+            className="px-4 py-3 sm:py-2 bg-slate-900 text-white rounded-xl font-medium shadow-lg shadow-slate-900/20 hover:bg-slate-800 transition-all w-full sm:w-auto whitespace-nowrap flex justify-center"
           >
             View Org Chart
           </button>

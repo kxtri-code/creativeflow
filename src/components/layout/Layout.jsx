@@ -9,9 +9,9 @@ const Layout = () => {
   return (
     <div className="flex min-h-screen bg-slate-50">
       <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
-      <div className="flex-1 lg:ml-64 flex flex-col min-w-0 transition-all duration-300">
+      <div className="flex-1 w-full lg:w-auto lg:ml-64 flex flex-col min-w-0 transition-all duration-300">
         <ProductivityBar onMenuClick={() => setIsMobileMenuOpen(true)} />
-        <main className="flex-1 p-4 lg:p-10 overflow-x-hidden animate-in fade-in zoom-in-95 duration-500">
+        <main className="flex-1 p-4 lg:p-10 overflow-x-hidden animate-in fade-in zoom-in-95 duration-500 w-full">
           <Outlet />
         </main>
       </div>

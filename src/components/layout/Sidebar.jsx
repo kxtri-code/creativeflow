@@ -166,14 +166,14 @@ const Sidebar = ({ isOpen, onClose }) => {
                 if (window.innerWidth < 1024) onClose();
               }}
               className={({ isActive }) => `
-                flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group
+                flex items-center gap-3 px-3 py-4 lg:py-3 rounded-xl transition-all duration-200 group
                 ${isActive 
                   ? 'bg-primary/10 text-primary font-semibold shadow-sm' 
                   : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}
               `}
             >
-              <item.icon className="w-5 h-5 flex-shrink-0" />
-              <span className="font-medium text-sm">{item.label}</span>
+              <item.icon className="w-6 h-6 lg:w-5 lg:h-5 flex-shrink-0" />
+              <span className="font-medium text-base lg:text-sm">{item.label}</span>
             </NavLink>
           ))}
         </nav>

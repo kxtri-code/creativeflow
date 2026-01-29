@@ -90,14 +90,14 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
           <p className="text-slate-500">Welcome back, Admin.</p>
         </div>
         <button 
           onClick={handleRefresh}
-          className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm"
+          className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm w-full md:w-auto justify-center"
         >
           <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
           Refresh Data

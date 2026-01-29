@@ -79,7 +79,7 @@ const ProductivityBar = () => {
       </div>
 
       {/* Goal Tracking */}
-      <div className="flex-1 max-w-xl mx-8">
+      <div className="hidden md:block flex-1 max-w-xl mx-8">
         <div className="flex justify-between text-xs mb-1 font-medium text-slate-500">
           <span>Daily Goal</span>
           <span>{Math.round(progress)}%</span>

@@ -19,7 +19,7 @@ import FinanceHub from './pages/FinanceHub';
 import InvoicesHub from './pages/InvoicesHub';
 import ProposalsHub from './pages/ProposalsHub';
 
-const ProtectedRoute = ({ allowedRoles }) => {
+const ProtectedRoute = ({ allowedRoles, requireLayout = true }) => {
   const { user, profile, loading, companies } = useAuth();
   const location = useLocation();
   
@@ -40,7 +40,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
     }
   }
 
-  return <Layout />;
+  return requireLayout ? <Layout /> : <Outlet />;
 };
 
 function App() {

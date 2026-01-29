@@ -36,6 +36,7 @@ const navItems = [
   { to: '/invoices', icon: FileText, label: 'Invoices', roles: ['admin', 'hod', 'user'] },
   { to: '/proposals', icon: FileSignature, label: 'Proposals', roles: ['admin', 'hod', 'user'] },
   { to: '/ops', icon: Briefcase, label: 'Operations', roles: ['admin', 'user'] },
+  { to: '/projects', icon: CheckSquare, label: 'Projects', roles: ['admin', 'hod', 'user'] },
 ];
 
 const Sidebar = ({ isOpen, onClose }) => {

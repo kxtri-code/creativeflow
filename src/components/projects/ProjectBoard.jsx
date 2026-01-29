@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, MoreHorizontal, Calendar, MessageSquare, Paperclip, Clock } from 'lucide-react';
+import { Plus, MoreHorizontal, Calendar, MessageSquare, Paperclip, Clock, User } from 'lucide-react';
 import TaskModal from './TaskModal';
 
 const COLUMNS = [
@@ -206,8 +206,5 @@ const ProjectBoard = () => {
     </div>
   );
 };
-
-// Helper Icon import (Missing in top imports)
-import { User } from 'lucide-react';
 
 export default ProjectBoard;

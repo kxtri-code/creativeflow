@@ -18,7 +18,8 @@ import {
   ChevronDown,
   Plus,
   Building,
-  Check
+  Check,
+  X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -36,7 +37,7 @@ const navItems = [
   { to: '/ops', icon: Briefcase, label: 'Operations', roles: ['admin', 'user'] },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const { logout, profile, companies, currentCompany, switchCompany, orgName } = useAuth();
   const navigate = useNavigate();
   const [isCompanyMenuOpen, setIsCompanyMenuOpen] = useState(false);
@@ -59,19 +60,32 @@ const Sidebar = () => {
 
   return (
     <>
-      <aside className="w-20 lg:w-64 h-screen fixed left-0 top-0 bg-white/80 backdrop-blur-xl border-r border-slate-200 z-40 flex flex-col transition-all duration-300">
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-sm"
+          onClick={onClose}
+        />
+      )}
+
+      <aside className={`
+        fixed left-0 top-0 h-screen bg-white/80 backdrop-blur-xl border-r border-slate-200 z-50 flex flex-col transition-transform duration-300
+        w-64
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        lg:translate-x-0
+      `}>
         
         {/* Company Switcher Header */}
-        <div className="relative h-20 flex items-center justify-center lg:justify-start lg:px-6 border-b border-slate-100 select-none">
+        <div className="relative h-20 flex items-center justify-between px-6 border-b border-slate-100 select-none">
           <div 
             onClick={() => setIsCompanyMenuOpen(!isCompanyMenuOpen)}
-            className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 p-2 rounded-xl transition-colors w-full"
+            className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 p-2 -ml-2 rounded-xl transition-colors flex-1 min-w-0"
           >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/30 flex-shrink-0">
               {currentCompany ? currentCompany.name.substring(0, 2).toUpperCase() : 'CF'}
             </div>
             
-            <div className="hidden lg:block flex-1 min-w-0">
+            <div className="flex-1 min-w-0">
               <div className="font-bold text-sm text-slate-900 truncate">
                 {currentCompany ? currentCompany.name : 'CreativeFlow'}
               </div>
@@ -80,8 +94,16 @@ const Sidebar = () => {
               </div>
             </div>
 
-            <ChevronDown size={16} className={`hidden lg:block text-slate-400 transition-transform ${isCompanyMenuOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown size={16} className={`text-slate-400 transition-transform ${isCompanyMenuOpen ? 'rotate-180' : ''}`} />
           </div>
+
+          {/* Mobile Close Button */}
+          <button 
+            onClick={onClose}
+            className="lg:hidden p-2 text-slate-400 hover:text-slate-600"
+          >
+            <X size={20} />
+          </button>
 
           {/* Dropdown Menu */}
           <AnimatePresence>
@@ -139,6 +161,10 @@ const Sidebar = () => {
             <NavLink
               key={item.to}
               to={item.to}
+              onClick={() => {
+                // Close on mobile when clicked
+                if (window.innerWidth < 1024) onClose();
+              }}
               className={({ isActive }) => `
                 flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group
                 ${isActive 
@@ -147,12 +173,7 @@ const Sidebar = () => {
               `}
             >
               <item.icon className="w-5 h-5 flex-shrink-0" />
-              <span className="hidden lg:block">{item.label}</span>
-              
-              {/* Tooltip for mobile/collapsed */}
-              <div className="absolute left-full ml-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none lg:hidden whitespace-nowrap z-50">
-                {item.label}
-              </div>
+              <span className="font-medium text-sm">{item.label}</span>
             </NavLink>
           ))}
         </nav>
@@ -163,18 +184,14 @@ const Sidebar = () => {
             className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-rose-500 hover:bg-rose-50 hover:text-rose-600 transition-colors mb-4 group"
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />
-            <span className="hidden lg:block font-medium">Log Out</span>
-            {/* Tooltip for mobile */}
-            <div className="absolute left-full ml-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none lg:hidden whitespace-nowrap z-50">
-              Log Out
-            </div>
+            <span className="font-medium">Log Out</span>
           </button>
 
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden">
               <img src={profile?.avatar_url || `https://ui-avatars.com/api/?name=${profile?.full_name || 'User'}&background=random`} alt="User" />
             </div>
-            <div className="hidden lg:block">
+            <div>
               <div className="font-medium text-sm text-slate-900">{profile?.full_name || 'User'}</div>
               <div className="text-xs text-slate-500 capitalize">{profile?.role || 'Guest'}</div>
             </div>

@@ -15,7 +15,7 @@ export const initializeGemini = (apiKey) => {
   }
 };
 
-export const getGeminiModel = (modelName = "gemini-2.5-flash") => {
+export const getGeminiModel = (modelName = "gemini-1.5-flash") => {
   if (!genAI) {
     // Auto-initialize if key is available in env or fallback
     const key = import.meta.env.VITE_GEMINI_API_KEY || FALLBACK_KEY;
@@ -29,7 +29,7 @@ export const getGeminiModel = (modelName = "gemini-2.5-flash") => {
     throw new Error("Gemini API not initialized. Please provide an API key.");
   }
   
-  // Use the latest stable model found in the environment (Gemini 2.5 Flash)
+  // Use the standard stable model (Gemini 1.5 Flash)
   return genAI.getGenerativeModel({ model: modelName });
 };
 

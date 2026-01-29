@@ -1,10 +1,10 @@
 import React from 'react';
 import { useProductivity } from '../../context/ProductivityContext';
 import { useToast } from '../../context/ToastContext';
-import { Play, Pause, Square, Coffee, Bell, Moon } from 'lucide-react';
+import { Play, Pause, Square, Coffee, Bell, Moon, Menu } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const ProductivityBar = () => {
+const ProductivityBar = ({ onMenuClick }) => {
   const { status, progress, clockIn, takeBreak, clockOut, elapsedTime } = useProductivity();
   const { addToast } = useToast();
 

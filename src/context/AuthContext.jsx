@@ -25,31 +25,36 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (isDemoMode) {
       // DEMO MODE: Load from localStorage
-      const storedUser = localStorage.getItem('demo_user');
-      const storedProfile = localStorage.getItem('demo_profile');
-      const storedCompanies = localStorage.getItem('demo_companies');
-      const storedCurrentCompanyId = localStorage.getItem('demo_current_company_id');
-      const storedOrgName = localStorage.getItem('demo_org_name');
+      try {
+        const storedUser = localStorage.getItem('demo_user');
+        const storedProfile = localStorage.getItem('demo_profile');
+        const storedCompanies = localStorage.getItem('demo_companies');
+        const storedCurrentCompanyId = localStorage.getItem('demo_current_company_id');
+        const storedOrgName = localStorage.getItem('demo_org_name');
 
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-        setProfile(JSON.parse(storedProfile));
-        
-        if (storedOrgName) {
-          setOrgName(storedOrgName);
-        }
-        
-        if (storedCompanies) {
-          const parsedCompanies = JSON.parse(storedCompanies);
-          setCompanies(parsedCompanies);
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+          if (storedProfile) setProfile(JSON.parse(storedProfile));
           
-          if (storedCurrentCompanyId) {
-            const current = parsedCompanies.find(c => c.id === storedCurrentCompanyId);
-            setCurrentCompany(current || parsedCompanies[0]);
-          } else if (parsedCompanies.length > 0) {
-            setCurrentCompany(parsedCompanies[0]);
+          if (storedOrgName) {
+            setOrgName(storedOrgName);
+          }
+          
+          if (storedCompanies) {
+            const parsedCompanies = JSON.parse(storedCompanies);
+            setCompanies(parsedCompanies);
+            
+            if (storedCurrentCompanyId) {
+              const current = parsedCompanies.find(c => c.id === storedCurrentCompanyId);
+              setCurrentCompany(current || parsedCompanies[0]);
+            } else if (parsedCompanies.length > 0) {
+              setCurrentCompany(parsedCompanies[0]);
+            }
           }
         }
+      } catch (error) {
+        console.error("Error loading demo data:", error);
+        localStorage.clear(); // Clear corrupted data
       }
       setLoading(false);
       return;

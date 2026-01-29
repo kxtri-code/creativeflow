@@ -29,9 +29,9 @@ export const ToastProvider = ({ children }) => {
             key={toast.id}
             className={`
               pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border animate-in slide-in-from-right-full duration-300
-              ${toast.type === 'success' ? 'bg-white border-emerald-100 text-emerald-700' :
-                toast.type === 'error' ? 'bg-white border-rose-100 text-rose-700' :
-                'bg-white border-indigo-100 text-indigo-700'}
+              ${toast.type === 'success' ? 'bg-white dark:bg-slate-800 border-emerald-100 dark:border-emerald-900/30 text-emerald-700 dark:text-emerald-400' :
+                toast.type === 'error' ? 'bg-white dark:bg-slate-800 border-rose-100 dark:border-rose-900/30 text-rose-700 dark:text-rose-400' :
+                'bg-white dark:bg-slate-800 border-indigo-100 dark:border-indigo-900/30 text-indigo-700 dark:text-indigo-400'}
             `}
           >
             {toast.type === 'success' && <CheckCircle size={18} className="text-emerald-500" />}

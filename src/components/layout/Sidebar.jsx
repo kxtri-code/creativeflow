@@ -1,0 +1,193 @@
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import AddCompanyModal from './AddCompanyModal';
+import { 
+  LayoutDashboard, 
+  Share2, 
+  Clapperboard, 
+  Palette, 
+  Code, 
+  PenTool, 
+  Users, 
+  Briefcase,
+  Banknote,
+  FileText,
+  FileSignature,
+  LogOut,
+  ChevronDown,
+  Plus,
+  Building,
+  Check
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const navItems = [
+  { to: '/', icon: LayoutDashboard, label: 'Dashboard', roles: ['admin', 'hod', 'hr', 'user'] },
+  { to: '/social', icon: Share2, label: 'Social Media', roles: ['admin', 'hod', 'user'] },
+  { to: '/media', icon: Clapperboard, label: 'Media & Prod', roles: ['admin', 'hod', 'user'] },
+  { to: '/design', icon: Palette, label: 'Design Studio', roles: ['admin', 'hod', 'user'] },
+  { to: '/tech', icon: Code, label: 'Tech Team', roles: ['admin', 'hod', 'user'] },
+  { to: '/content', icon: PenTool, label: 'Content', roles: ['admin', 'hod', 'user'] },
+  { to: '/hr', icon: Users, label: 'People & HR', roles: ['admin', 'hr', 'user'] },
+  { to: '/finance', icon: Banknote, label: 'Finance', roles: ['admin', 'user'] },
+  { to: '/invoices', icon: FileText, label: 'Invoices', roles: ['admin', 'hod', 'user'] },
+  { to: '/proposals', icon: FileSignature, label: 'Proposals', roles: ['admin', 'hod', 'user'] },
+  { to: '/ops', icon: Briefcase, label: 'Operations', roles: ['admin', 'user'] },
+];
+
+const Sidebar = () => {
+  const { logout, profile, companies, currentCompany, switchCompany, orgName } = useAuth();
+  const navigate = useNavigate();
+  const [isCompanyMenuOpen, setIsCompanyMenuOpen] = useState(false);
+  const [isAddCompanyModalOpen, setIsAddCompanyModalOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/landing');
+  };
+
+  // Helper to check if user has access to a nav item
+  const hasAccess = (allowedRoles) => {
+    if (!profile?.role) return true;
+    if (profile.role === 'admin') return true;
+    return allowedRoles.includes(profile.role);
+  };
+
+  // Filter items based on RBAC
+  const filteredNavItems = navItems.filter(item => hasAccess(item.roles));
+
+  return (
+    <>
+      <aside className="w-20 lg:w-64 h-screen fixed left-0 top-0 bg-white/80 backdrop-blur-xl border-r border-slate-200 z-40 flex flex-col transition-all duration-300">
+        
+        {/* Company Switcher Header */}
+        <div className="relative h-20 flex items-center justify-center lg:justify-start lg:px-6 border-b border-slate-100 select-none">
+          <div 
+            onClick={() => setIsCompanyMenuOpen(!isCompanyMenuOpen)}
+            className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 p-2 rounded-xl transition-colors w-full"
+          >
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/30 flex-shrink-0">
+              {currentCompany ? currentCompany.name.substring(0, 2).toUpperCase() : 'CF'}
+            </div>
+            
+            <div className="hidden lg:block flex-1 min-w-0">
+              <div className="font-bold text-sm text-slate-900 truncate">
+                {currentCompany ? currentCompany.name : 'CreativeFlow'}
+              </div>
+              <div className="text-xs text-slate-500 truncate">
+                {currentCompany ? orgName : 'Select Company'}
+              </div>
+            </div>
+
+            <ChevronDown size={16} className={`hidden lg:block text-slate-400 transition-transform ${isCompanyMenuOpen ? 'rotate-180' : ''}`} />
+          </div>
+
+          {/* Dropdown Menu */}
+          <AnimatePresence>
+            {isCompanyMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="absolute top-full left-4 right-4 mt-2 bg-white rounded-xl shadow-xl border border-slate-100 p-2 z-50 w-56"
+              >
+                <div className="text-xs font-semibold text-slate-400 px-2 py-1 mb-1">SWITCH COMPANY</div>
+                
+                <div className="max-h-48 overflow-y-auto space-y-1">
+                  {companies.map(company => (
+                    <button
+                      key={company.id}
+                      onClick={() => {
+                        switchCompany(company.id);
+                        setIsCompanyMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-2 py-2 rounded-lg text-sm transition-colors ${
+                        currentCompany?.id === company.id 
+                          ? 'bg-primary/5 text-primary font-medium' 
+                          : 'text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        <Building size={14} />
+                        <span className="truncate">{company.name}</span>
+                      </div>
+                      {currentCompany?.id === company.id && <Check size={14} />}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="h-px bg-slate-100 my-2"></div>
+
+                <button
+                  onClick={() => {
+                    setIsAddCompanyModalOpen(true);
+                    setIsCompanyMenuOpen(false);
+                  }}
+                  className="w-full flex items-center gap-2 px-2 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-lg transition-colors"
+                >
+                  <Plus size={14} />
+                  <span>Create New Company</span>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <nav className="flex-1 overflow-y-auto py-6 flex flex-col gap-2 px-3">
+          {filteredNavItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) => `
+                flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 group
+                ${isActive 
+                  ? 'bg-primary/10 text-primary font-semibold shadow-sm' 
+                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}
+              `}
+            >
+              <item.icon className="w-5 h-5 flex-shrink-0" />
+              <span className="hidden lg:block">{item.label}</span>
+              
+              {/* Tooltip for mobile/collapsed */}
+              <div className="absolute left-full ml-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none lg:hidden whitespace-nowrap z-50">
+                {item.label}
+              </div>
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="p-4 border-t border-slate-100">
+          <button 
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-rose-500 hover:bg-rose-50 hover:text-rose-600 transition-colors mb-4 group"
+          >
+            <LogOut className="w-5 h-5 flex-shrink-0" />
+            <span className="hidden lg:block font-medium">Log Out</span>
+            {/* Tooltip for mobile */}
+            <div className="absolute left-full ml-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none lg:hidden whitespace-nowrap z-50">
+              Log Out
+            </div>
+          </button>
+
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden">
+              <img src={profile?.avatar_url || `https://ui-avatars.com/api/?name=${profile?.full_name || 'User'}&background=random`} alt="User" />
+            </div>
+            <div className="hidden lg:block">
+              <div className="font-medium text-sm text-slate-900">{profile?.full_name || 'User'}</div>
+              <div className="text-xs text-slate-500 capitalize">{profile?.role || 'Guest'}</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <AddCompanyModal 
+        isOpen={isAddCompanyModalOpen} 
+        onClose={() => setIsAddCompanyModalOpen(false)} 
+      />
+    </>
+  );
+};
+
+export default Sidebar;

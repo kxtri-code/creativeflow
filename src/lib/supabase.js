@@ -1,0 +1,13 @@
+import { createClient } from '@supabase/supabase-js';
+
+// These should be in your .env file
+// VITE_SUPABASE_URL=your_project_url
+// VITE_SUPABASE_ANON_KEY=your_anon_key
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder-project.supabase.co', 
+  supabaseAnonKey || 'placeholder-key'
+);

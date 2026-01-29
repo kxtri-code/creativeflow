@@ -18,6 +18,7 @@ import OperationsHub from './pages/OperationsHub';
 import FinanceHub from './pages/FinanceHub';
 import InvoicesHub from './pages/InvoicesHub';
 import ProposalsHub from './pages/ProposalsHub';
+import ProjectsHub from './pages/ProjectsHub';
 
 const ProtectedRoute = ({ allowedRoles, requireLayout = true }) => {
   const { user, profile, loading, companies } = useAuth();

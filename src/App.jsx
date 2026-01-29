@@ -45,10 +45,11 @@ const ProtectedRoute = ({ allowedRoles, requireLayout = true }) => {
 
 function App() {
   return (
-    <ToastProvider>
-      <AuthProvider>
-        <AIProvider>
-          <ProductivityProvider>
+    <ThemeProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <AIProvider>
+            <ProductivityProvider>
             <Router>
               <Routes>
                 <Route path="/landing" element={<LandingPage />} />

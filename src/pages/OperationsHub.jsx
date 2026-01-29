@@ -116,7 +116,6 @@ const OperationsHub = () => {
         <div className="col-span-12 h-[400px]">
           <SecureVault /></div>
         </div>
-      </div>
       <InventoryModal isOpen={isInventoryOpen} onClose={() => setIsInventoryOpen(false)} />
     </div>
   );

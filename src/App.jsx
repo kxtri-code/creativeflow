@@ -66,6 +66,7 @@ function App() {
                   <Route path="/design" element={<DesignHub />} />
                   <Route path="/tech" element={<TechHub />} />
                   <Route path="/content" element={<ContentHub />} />
+                  <Route path="/projects" element={<ProjectsHub />} />
                 </Route>
 
                 <Route element={<ProtectedRoute allowedRoles={['admin', 'hr', 'hod', 'user']} />}>
@@ -85,10 +86,11 @@ function App() {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Router>
-          </ProductivityProvider>
-        </AIProvider>
-      </AuthProvider>
-    </ToastProvider>
+            </ProductivityProvider>
+          </AIProvider>
+        </AuthProvider>
+      </ToastProvider>
+    </ThemeProvider>
   );
 }
 

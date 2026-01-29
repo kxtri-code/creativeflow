@@ -19,7 +19,8 @@ import {
   Plus,
   Building,
   Check,
-  X
+  X,
+  CheckSquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -179,6 +180,18 @@ const Sidebar = ({ isOpen, onClose }) => {
         </nav>
 
         <div className="p-4 border-t border-slate-100">
+          <button 
+            onClick={toggleTheme}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200 mb-2 ${
+              theme === 'dark' ? 'bg-slate-800 text-yellow-400' : 'hover:bg-slate-800 text-slate-400 hover:text-white'
+            }`}
+          >
+            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            <span className="whitespace-nowrap font-medium">
+              {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+            </span>
+          </button>
+
           <button 
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-rose-500 hover:bg-rose-50 hover:text-rose-600 transition-colors mb-4 group"

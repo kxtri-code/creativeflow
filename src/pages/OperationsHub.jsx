@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useToast } from '../context/ToastContext';
 import FinanceOverview from '../components/ops/FinanceOverview';
 import SecureVault from '../components/ops/SecureVault';
+import InventoryModal from '../components/ops/InventoryModal';
 import { MessageSquare, Package, Settings, Users } from 'lucide-react';
 
 const OperationsHub = () => {
   const { addToast } = useToast();
+  const [isInventoryOpen, setIsInventoryOpen] = useState(false);
 
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col">
@@ -41,7 +43,7 @@ const OperationsHub = () => {
           {/* Quick Actions Grid */}
           <div className="grid grid-cols-2 gap-4">
             <button 
-              onClick={() => addToast('Opening Global Inventory...', 'info')}
+              onClick={() => setIsInventoryOpen(true)}
               className="glass-card p-4 hover:bg-indigo-50 transition-colors text-left group"
             >
               <div className="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">

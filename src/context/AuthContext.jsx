@@ -111,6 +111,40 @@ export const AuthProvider = ({ children }) => {
     return newCompany;
   };
 
+  const updateCompany = async (companyId, updates) => {
+    const updatedCompanies = companies.map(c => 
+      c.id === companyId ? { ...c, ...updates } : c
+    );
+    setCompanies(updatedCompanies);
+    localStorage.setItem('demo_companies', JSON.stringify(updatedCompanies));
+
+    if (currentCompany && currentCompany.id === companyId) {
+      const updatedCurrent = { ...currentCompany, ...updates };
+      setCurrentCompany(updatedCurrent);
+    }
+    
+    addToast('Company updated successfully', 'success');
+  };
+
+  const deleteCompany = async (companyId) => {
+    if (companies.length <= 1) {
+      throw new Error("Cannot delete the only company.");
+    }
+
+    const updatedCompanies = companies.filter(c => c.id !== companyId);
+    setCompanies(updatedCompanies);
+    localStorage.setItem('demo_companies', JSON.stringify(updatedCompanies));
+
+    if (currentCompany && currentCompany.id === companyId) {
+      const nextCompany = updatedCompanies[0];
+      setCurrentCompany(nextCompany);
+      localStorage.setItem('demo_current_company_id', nextCompany.id);
+      addToast(`Switched to ${nextCompany.name}`, 'info');
+    }
+
+    addToast('Company deleted successfully', 'success');
+  };
+
   const switchCompany = (companyId) => {
     const company = companies.find(c => c.id === companyId);
     if (company) {

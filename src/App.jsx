@@ -46,6 +46,10 @@ const ProtectedRoute = ({ allowedRoles, requireLayout = true }) => {
 };
 
 function App() {
+  React.useEffect(() => {
+    console.log("CreativeFlow CRM v1.2.0 - Loaded with Demo Mode");
+  }, []);
+
   return (
     <ThemeProvider>
       <ToastProvider>

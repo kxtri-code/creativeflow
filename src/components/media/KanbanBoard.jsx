@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MoreHorizontal, Plus, Calendar, MapPin, Camera, Clock, AlertCircle, CheckSquare } from 'lucide-react';
+import MediaTaskModal from './MediaTaskModal';
 
 const initialColumns = {
   concept: {
@@ -112,6 +113,45 @@ const initialColumns = {
 
 const KanbanBoard = () => {
   const [columns, setColumns] = useState(initialColumns);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
+  const [activeColumnId, setActiveColumnId] = useState(null);
+
+  const handleCardClick = (task, columnId) => {
+    setEditingTask(task);
+    setActiveColumnId(columnId);
+    setIsModalOpen(true);
+  };
+
+  const handleAddTask = (columnId) => {
+    setEditingTask(null);
+    setActiveColumnId(columnId);
+    setIsModalOpen(true);
+  };
+
+  const handleSaveTask = (taskData, columnId) => {
+    const newColumns = { ...columns };
+    
+    // Check if we are editing an existing task
+    if (editingTask) {
+      // Find the task in the current column (or scan all if needed, but we have columnId)
+      const column = newColumns[columnId];
+      const taskIndex = column.items.findIndex(t => t.id === taskData.id);
+      
+      if (taskIndex > -1) {
+        // Update existing task
+        column.items[taskIndex] = taskData;
+      } else {
+        // Handle case where column might have changed (advanced) or error
+        // For now assuming same column for edit
+      }
+    } else {
+      // Add new task
+      newColumns[columnId].items.push(taskData);
+    }
+    
+    setColumns(newColumns);
+  };
 
   const handleDragStart = (e, cardId, sourceColId) => {
     e.dataTransfer.setData('cardId', cardId);
@@ -186,7 +226,8 @@ const KanbanBoard = () => {
                 key={item.id}
                 draggable
                 onDragStart={(e) => handleDragStart(e, item.id, col.id)}
-                className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-300 cursor-move transition-all active:cursor-grabbing group"
+                onClick={() => handleCardClick(item, col.id)}
+                className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-300 cursor-pointer transition-all active:cursor-grabbing group"
               >
                 {/* Header Tags */}
                 <div className="flex justify-between items-start mb-3">
@@ -246,12 +287,23 @@ const KanbanBoard = () => {
               </div>
             ))}
             
-            <button className="w-full py-2.5 border-2 border-dashed border-slate-200 rounded-xl text-slate-400 text-sm font-medium hover:bg-slate-50 hover:border-slate-300 hover:text-slate-600 transition-all flex items-center justify-center gap-2">
+            <button 
+              onClick={() => handleAddTask(col.id)}
+              className="w-full py-2.5 border-2 border-dashed border-slate-200 rounded-xl text-slate-400 text-sm font-medium hover:bg-slate-50 hover:border-slate-300 hover:text-slate-600 transition-all flex items-center justify-center gap-2"
+            >
               <Plus size={16} /> Add Task
             </button>
           </div>
         </div>
       ))}
+
+      <MediaTaskModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        task={editingTask}
+        columnId={activeColumnId}
+        onSave={handleSaveTask}
+      />
     </div>
   );
 };

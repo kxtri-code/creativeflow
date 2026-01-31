@@ -15,7 +15,7 @@ export const initializeGemini = (apiKey) => {
   }
 };
 
-export const getGeminiModel = (modelName = "gemini-1.5-flash") => {
+export const getGeminiModel = (modelName = "gemini-2.0-flash") => {
   if (!genAI) {
     // Auto-initialize if key is available in env
     const key = import.meta.env.VITE_GEMINI_API_KEY;
@@ -35,9 +35,9 @@ export const getGeminiModel = (modelName = "gemini-1.5-flash") => {
   return genAI.getGenerativeModel({ model: modelName });
 };
 
-// Removed gemini-pro as it's deprecated/unavailable in v1beta for free tier in some regions
-// gemini-1.5-flash is the current standard for speed and cost
-const MODELS_TO_TRY = ["gemini-1.5-flash", "gemini-1.5-flash-001"];
+// gemini-2.0-flash is the latest stable model
+// gemini-1.5-flash is kept as a fallback just in case
+const MODELS_TO_TRY = ["gemini-2.0-flash", "gemini-1.5-flash"];
 
 export const generateJSON = async (prompt, schema) => {
   let lastError = null;
@@ -48,8 +48,8 @@ export const generateJSON = async (prompt, schema) => {
       const model = getGeminiModel(modelName);
       
       // Attempt 1: Try with structured output schema (Best for reliability)
-      // Only 1.5 models support responseSchema well in all versions
-      if (modelName.includes("1.5")) {
+      // Only 1.5/2.0 models support responseSchema well in all versions
+      if (modelName.includes("1.5") || modelName.includes("2.0")) {
         try {
           const result = await model.generateContent({
             contents: [{ role: "user", parts: [{ text: prompt }] }],

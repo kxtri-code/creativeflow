@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Calendar, Hash, Image as ImageIcon, Wand2, Instagram, Linkedin, Twitter, Facebook } from 'lucide-react';
 import { useAI } from '../../context/AIContext';
-import { generateJSON } from '../../lib/openai';
+import { generateJSON } from '../../lib/gemini';
 import { useToast } from '../../context/ToastContext';
 
 const platforms = [

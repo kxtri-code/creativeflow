@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAI } from '../../context/AIContext';
 import { useToast } from '../../context/ToastContext';
-import { generateJSON } from '../../lib/openai';
+import { generateJSON } from '../../lib/gemini';
 import { Sparkles, Copy, Check, RefreshCw } from 'lucide-react';
 
 const AICaptionist = () => {

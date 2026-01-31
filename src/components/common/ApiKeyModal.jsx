@@ -41,13 +41,13 @@ const ApiKeyModal = ({ isOpen, onClose }) => {
             <Key size={24} className="text-white" />
           </div>
           <h2 className="text-xl font-bold">Configure AI Access</h2>
-          <p className="text-indigo-100 text-sm mt-1">Enter your OpenAI API Key to enable real AI features.</p>
+          <p className="text-indigo-100 text-sm mt-1">Enter your Gemini API Key to enable real AI features.</p>
         </div>
 
         <div className="p-6 space-y-4">
           <div>
             <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-              OpenAI API Key
+              Google Gemini API Key
             </label>
             <div className="relative">
               <input 
@@ -57,7 +57,7 @@ const ApiKeyModal = ({ isOpen, onClose }) => {
                   setInputKey(e.target.value);
                   setStatus('idle');
                 }}
-                placeholder="sk-..."
+                placeholder="AIzaSy..."
                 className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all font-mono text-sm dark:text-white"
               />
               <ShieldCheck className="absolute left-3 top-3 text-slate-400" size={18} />
@@ -94,12 +94,12 @@ const ApiKeyModal = ({ isOpen, onClose }) => {
           
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
              <a 
-               href="https://platform.openai.com/api-keys" 
+               href="https://aistudio.google.com/app/apikey" 
                target="_blank" 
                rel="noreferrer"
                className="text-xs text-indigo-500 hover:text-indigo-600 font-medium inline-flex items-center gap-1"
              >
-               Get your API Key from OpenAI
+               Get a free API Key from Google AI Studio
              </a>
           </div>
         </div>

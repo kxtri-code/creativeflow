@@ -1,4 +1,7 @@
 
+// User provided fallback key (removed for security - use Settings > AI Settings)
+const FALLBACK_KEY = null;
+
 let openAIKey = null;
 
 export const initializeOpenAI = (apiKey) => {
@@ -10,14 +13,26 @@ export const initializeOpenAI = (apiKey) => {
   console.log("OpenAI API initialized successfully");
 };
 
-export const generateJSON = async (prompt, schema) => {
-  if (!openAIKey) {
-    // Try to get from env if not set
-    const envKey = import.meta.env.VITE_OPENAI_API_KEY;
-    if (envKey) openAIKey = envKey;
-  }
+const getApiKey = () => {
+  if (openAIKey) return openAIKey;
+  
+  // 1. Check environment variable
+  const envKey = import.meta.env.VITE_OPENAI_API_KEY;
+  if (envKey) return envKey;
+  
+  // 2. Check localStorage
+  const localKey = localStorage.getItem('openai_api_key');
+  if (localKey) return localKey;
 
-  if (!openAIKey) {
+  // 3. Use fallback
+  console.log("Using fallback OpenAI key");
+  return FALLBACK_KEY;
+}
+
+export const generateJSON = async (prompt, schema) => {
+  const key = getApiKey();
+
+  if (!key) {
     throw new Error("OpenAI API Key not found. Please configure it in Settings.");
   }
 
@@ -26,15 +41,15 @@ export const generateJSON = async (prompt, schema) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${openAIKey}`
+        "Authorization": `Bearer ${key}`
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini", // Fast and cheap, similar to gemini-flash
+        model: "gpt-4o-mini", // Fast and cheap, good for JSON
         messages: [
           {
             role: "system",
             content: `You are a helpful AI assistant. You must output valid JSON. 
-            The JSON must strictly follow this schema structure: ${JSON.stringify(schema)}`
+            The JSON must strictly follow this schema structure: ${JSON.stringify(schema || {})}`
           },
           {
             role: "user",
@@ -52,7 +67,7 @@ export const generateJSON = async (prompt, schema) => {
 
     const data = await response.json();
     const content = data.choices[0].message.content;
-    return content;
+    return JSON.parse(content);
 
   } catch (error) {
     console.error("OpenAI Generation Error:", error);
@@ -61,12 +76,9 @@ export const generateJSON = async (prompt, schema) => {
 };
 
 export const generateText = async (prompt) => {
-  if (!openAIKey) {
-    const envKey = import.meta.env.VITE_OPENAI_API_KEY;
-    if (envKey) openAIKey = envKey;
-  }
+  const key = getApiKey();
 
-  if (!openAIKey) {
+  if (!key) {
     throw new Error("OpenAI API Key not found. Please configure it in Settings.");
   }
 
@@ -75,7 +87,7 @@ export const generateText = async (prompt) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${openAIKey}`
+        "Authorization": `Bearer ${key}`
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",

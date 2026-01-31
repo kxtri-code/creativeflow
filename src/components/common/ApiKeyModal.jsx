@@ -94,12 +94,12 @@ const ApiKeyModal = ({ isOpen, onClose }) => {
           
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
              <a 
-               href="https://aistudio.google.com/app/apikey" 
+               href="https://platform.openai.com/api-keys" 
                target="_blank" 
                rel="noreferrer"
                className="text-xs text-indigo-500 hover:text-indigo-600 font-medium inline-flex items-center gap-1"
              >
-               Get a free API Key from Google AI Studio
+               Get your API Key from OpenAI
              </a>
           </div>
         </div>

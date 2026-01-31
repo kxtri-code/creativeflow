@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { generateJSON } from '../lib/gemini';
+import { generateJSON } from '../lib/openai';
 import { useAI } from '../context/AIContext';
 import { useToast } from '../context/ToastContext';
 import { Sparkles, AlertCircle, Trophy, TrendingUp, DollarSign, Clock, RefreshCw } from 'lucide-react';

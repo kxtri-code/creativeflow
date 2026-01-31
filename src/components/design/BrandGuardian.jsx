@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAI } from '../../context/AIContext';
 import { useToast } from '../../context/ToastContext';
-import { generateJSON } from '../../lib/gemini';
+import { generateJSON } from '../../lib/openai';
 import { ShieldCheck, UploadCloud, AlertCircle, CheckCircle } from 'lucide-react';
 
 const BrandGuardian = ({ onUpload }) => {

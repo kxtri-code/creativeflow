@@ -62,7 +62,7 @@ const NewPostModal = ({ isOpen, onClose, onSchedule }) => {
       };
 
       const result = await generateJSON(prompt, schema);
-      const parsed = JSON.parse(result);
+      const parsed = result;
       setFormData(prev => ({ ...prev, content: parsed.content }));
       addToast('AI generated content!', 'success');
     } catch (error) {

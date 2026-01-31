@@ -46,7 +46,7 @@ const AICaptionist = () => {
       };
 
       const json = await generateJSON(prompt, schema);
-      setResult(JSON.parse(json));
+      setResult(json);
     } catch (error) {
       console.error("Caption generation failed", error);
       // Fallback

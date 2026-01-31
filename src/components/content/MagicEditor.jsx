@@ -43,7 +43,7 @@ const MagicEditor = () => {
       };
 
       const json = await generateJSON(prompt, schema);
-      setResult(JSON.parse(json));
+      setResult(json);
     } catch (error) {
       console.error("Magic Editor failed", error);
       setResult({

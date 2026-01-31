@@ -24,7 +24,14 @@ const ProjectBoard = ({ viewMode = 'board' }) => {
   useEffect(() => {
     const savedTasks = localStorage.getItem('project_tasks');
     if (savedTasks) {
-      setTasks(JSON.parse(savedTasks));
+      try {
+        setTasks(JSON.parse(savedTasks));
+      } catch (e) {
+        console.error("Failed to parse tasks from localStorage", e);
+        // Fallback to mock data if parsing fails
+        setTasks([]); 
+        localStorage.removeItem('project_tasks');
+      }
     } else {
       // Mock Data
       const mockTasks = [

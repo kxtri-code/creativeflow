@@ -67,7 +67,13 @@ export const generateJSON = async (prompt, schema) => {
 
     const data = await response.json();
     const content = data.choices[0].message.content;
-    return JSON.parse(content);
+    
+    try {
+      return JSON.parse(content);
+    } catch (parseError) {
+      console.error("OpenAI returned invalid JSON:", content);
+      throw new Error("AI response was not valid JSON");
+    }
 
   } catch (error) {
     console.error("OpenAI Generation Error:", error);

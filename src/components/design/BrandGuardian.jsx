@@ -56,7 +56,7 @@ const BrandGuardian = ({ onUpload }) => {
       };
 
       const json = await generateJSON(prompt, schema);
-      setResult(JSON.parse(json));
+      setResult(json);
     } catch (error) {
       console.error("Brand analysis failed", error);
       setResult({

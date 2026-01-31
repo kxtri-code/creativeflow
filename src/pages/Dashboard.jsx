@@ -63,7 +63,7 @@ const Dashboard = () => {
       };
 
       const result = await generateJSON(prompt, schema);
-      setBriefing(JSON.parse(result));
+      setBriefing(result);
       addToast('AI Briefing updated', 'success');
     } catch (error) {
       console.error("AI Briefing failed", error);

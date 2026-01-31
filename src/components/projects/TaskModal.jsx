@@ -12,6 +12,7 @@ const TaskModal = ({ isOpen, onClose, task, onSave, users }) => {
     description: '',
     status: 'To Do',
     priority: 'Medium',
+    startDate: '',
     dueDate: '',
     assignees: [],
     tags: [],
@@ -23,8 +24,20 @@ const TaskModal = ({ isOpen, onClose, task, onSave, users }) => {
   const [tagInput, setTagInput] = useState('');
   const [showMentionList, setShowMentionList] = useState(false);
 
+  const handleCommentChange = (e) => {
+    const value = e.target.value;
+    setNewComment(value);
+    
+    // Auto-detect @ symbol
+    if (value.endsWith('@')) {
+      setShowMentionList(true);
+    } else if (!value.includes('@')) {
+      setShowMentionList(false);
+    }
+  };
+
   const insertMention = (userName) => {
-    setNewComment(prev => prev + `@${userName} `);
+    setNewComment(prev => prev.replace(/@$/, '') + `@${userName} `);
     setShowMentionList(false);
     // Focus back on input would be ideal here but skipping for simplicity
   };
@@ -39,6 +52,7 @@ const TaskModal = ({ isOpen, onClose, task, onSave, users }) => {
           description: '',
           status: 'To Do',
           priority: 'Medium',
+          startDate: new Date().toISOString().split('T')[0],
           dueDate: new Date().toISOString().split('T')[0],
           assignees: [],
           tags: [],
@@ -207,9 +221,9 @@ const TaskModal = ({ isOpen, onClose, task, onSave, users }) => {
                     <input 
                       type="text" 
                       value={newComment}
-                      onChange={e => setNewComment(e.target.value)}
+                      onChange={handleCommentChange}
                       onKeyDown={e => e.key === 'Enter' && addComment()}
-                      placeholder="Write a comment..."
+                      placeholder="Write a comment... (Type @ to mention)"
                       className="w-full pl-4 pr-20 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/20 outline-none"
                     />
                     <div className="absolute right-2 top-1.5 flex items-center gap-1">
@@ -263,13 +277,27 @@ const TaskModal = ({ isOpen, onClose, task, onSave, users }) => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-500 mb-1">Due Date</label>
-                  <input 
-                    type="date" 
-                    value={formData.dueDate}
-                    onChange={e => setFormData({...formData, dueDate: e.target.value})}
-                    className="w-full p-2 bg-white border border-slate-200 rounded-lg text-sm outline-none"
-                  />
+                  <label className="block text-xs font-semibold text-slate-500 mb-1">Timeline</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <span className="text-[10px] text-slate-400">Start</span>
+                      <input 
+                        type="date" 
+                        value={formData.startDate}
+                        onChange={e => setFormData({...formData, startDate: e.target.value})}
+                        className="w-full p-2 bg-white border border-slate-200 rounded-lg text-sm outline-none"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400">Due</span>
+                      <input 
+                        type="date" 
+                        value={formData.dueDate}
+                        onChange={e => setFormData({...formData, dueDate: e.target.value})}
+                        className="w-full p-2 bg-white border border-slate-200 rounded-lg text-sm outline-none"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 

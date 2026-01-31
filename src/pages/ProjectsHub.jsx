@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import ProjectBoard from '../components/projects/ProjectBoard';
-import { Filter, Search, Plus, Users, Layout, List } from 'lucide-react';
+import { Filter, Search, Plus, Users, Layout, Calendar } from 'lucide-react';
 
 const ProjectsHub = () => {
-  const [viewMode, setViewMode] = useState('board'); // board | list
+  const [viewMode, setViewMode] = useState('board'); // board | timeline
 
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col">
@@ -18,14 +18,16 @@ const ProjectsHub = () => {
             <button 
               onClick={() => setViewMode('board')}
               className={`p-2 rounded-lg transition-colors ${viewMode === 'board' ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:text-slate-600'}`}
+              title="Board View"
             >
               <Layout size={18} />
             </button>
             <button 
-              onClick={() => setViewMode('list')}
-              className={`p-2 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:text-slate-600'}`}
+              onClick={() => setViewMode('timeline')}
+              className={`p-2 rounded-lg transition-colors ${viewMode === 'timeline' ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:text-slate-600'}`}
+              title="Timeline View"
             >
-              <List size={18} />
+              <Calendar size={18} />
             </button>
           </div>
           
@@ -41,16 +43,7 @@ const ProjectsHub = () => {
       </div>
 
       <div className="flex-1 min-h-0">
-        {viewMode === 'board' ? (
-          <ProjectBoard />
-        ) : (
-          <div className="h-full flex items-center justify-center text-slate-400 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
-            <div className="text-center">
-              <List size={48} className="mx-auto mb-4 opacity-20" />
-              <p>List View Coming Soon</p>
-            </div>
-          </div>
-        )}
+        <ProjectBoard viewMode={viewMode} />
       </div>
     </div>
   );

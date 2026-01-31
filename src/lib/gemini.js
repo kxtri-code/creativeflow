@@ -40,7 +40,7 @@ export const getGeminiModel = (modelName = "gemini-1.5-flash") => {
 const MODELS_TO_TRY = [
   "gemini-1.5-flash", // Standard fast model
   "gemini-1.5-pro",   // Standard capable model
-  "gemini-1.0-pro"    // Legacy stable model
+  "gemini-pro"        // Legacy stable model (1.0 Pro)
 ];
 
 export const generateJSON = async (prompt, schema) => {
@@ -65,8 +65,8 @@ export const generateJSON = async (prompt, schema) => {
           let text = result.response.text();
           return cleanJsonText(text);
         } catch (schemaError) {
-           console.warn(`Schema generation failed for ${modelName}, falling back to simple JSON mode`, schemaError);
-           // Continue to simple JSON mode below
+          console.warn(`Schema generation failed for ${modelName}, falling back to simple JSON mode`, schemaError);
+          // Continue to simple JSON mode below
         }
       }
 
@@ -108,11 +108,19 @@ const cleanJsonText = (text) => {
 };
 
 export const generateText = async (prompt) => {
-  const model = getGeminiModel();
-  
-  const result = await model.generateContent({
-    contents: [{ role: "user", parts: [{ text: prompt }] }],
-  });
+  let lastError = null;
 
-  return result.response.text();
+  for (const modelName of MODELS_TO_TRY) {
+    try {
+      const model = getGeminiModel(modelName);
+      const result = await model.generateContent({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+      });
+      return result.response.text();
+    } catch (error) {
+      console.warn(`Model ${modelName} failed for text generation`, error);
+      lastError = error;
+    }
+  }
+  throw lastError || new Error("All Gemini models failed to generate text.");
 };

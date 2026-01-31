@@ -38,6 +38,7 @@ const ProposalsHub = () => {
       Client: ${form.client || "Generic Client"}
       Title: ${form.title || "Generic Project"}
       Currency: ${currentCompany?.currency || 'USD'}
+      Tax/GST Status: ${currentCompany?.isGST ? 'GST Compliant (18% Tax)' : 'Non-GST (No Tax)'}.
       Tone: professional and persuasive. Output plain text.`;
       
       const response = await generateText(prompt);

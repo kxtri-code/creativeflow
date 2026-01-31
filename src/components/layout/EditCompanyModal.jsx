@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from '../shared/Modal';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
+import { Trash2 } from 'lucide-react';
 
 const SECTORS = [
   "IT Services & Software",
@@ -21,8 +22,8 @@ const SECTORS = [
   "Other"
 ];
 
-const AddCompanyModal = ({ isOpen, onClose }) => {
-  const { createCompany, currencies } = useAuth();
+const EditCompanyModal = ({ isOpen, onClose }) => {
+  const { currentCompany, updateCompany, deleteCompany, currencies } = useAuth();
   const { addToast } = useToast();
   const [form, setForm] = useState({
     name: '',
@@ -35,33 +36,58 @@ const AddCompanyModal = ({ isOpen, onClose }) => {
   });
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (currentCompany && isOpen) {
+      setForm({
+        name: currentCompany.name || '',
+        currency: currentCompany.currency || 'INR',
+        isGST: currentCompany.isGST || false,
+        gstNumber: currentCompany.gstNumber || '',
+        address: currentCompany.address || '',
+        sector: currentCompany.sector || '',
+        taxRate: currentCompany.taxRate || 18
+      });
+    }
+  }, [currentCompany, isOpen]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name) return;
 
     setLoading(true);
     try {
-      await createCompany(
-        form.name, 
-        form.currency, 
-        form.isGST, 
-        form.gstNumber, 
-        form.address, 
-        form.sector, 
-        form.isGST ? form.taxRate : 0
-      );
-      addToast('New company workspace created', 'success');
-      setForm({ name: '', currency: 'INR', isGST: false, gstNumber: '', address: '', sector: '', taxRate: 18 });
+      await updateCompany(currentCompany.id, {
+        name: form.name,
+        currency: form.currency,
+        isGST: form.isGST,
+        gstNumber: form.gstNumber,
+        address: form.address,
+        sector: form.sector,
+        taxRate: form.isGST ? Number(form.taxRate) : 0
+      });
+      addToast('Company profile updated', 'success');
       onClose();
     } catch (error) {
-      addToast('Failed to create company', 'error');
+      addToast('Failed to update company', 'error');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleDelete = async () => {
+    if (window.confirm(`Are you sure you want to delete ${currentCompany.name}? This cannot be undone.`)) {
+      try {
+        await deleteCompany(currentCompany.id);
+        addToast('Company deleted', 'info');
+        onClose();
+      } catch (error) {
+        addToast(error.message, 'error');
+      }
+    }
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Add New Company">
+    <Modal isOpen={isOpen} onClose={onClose} title="Edit Company Profile">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">Company Name</label>
@@ -106,12 +132,12 @@ const AddCompanyModal = ({ isOpen, onClose }) => {
         <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg border border-slate-100">
           <input 
             type="checkbox" 
-            id="isGST"
+            id="edit_isGST"
             checked={form.isGST}
             onChange={e => setForm({...form, isGST: e.target.checked})}
             className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500"
           />
-          <label htmlFor="isGST" className="text-sm font-medium text-slate-700 cursor-pointer">
+          <label htmlFor="edit_isGST" className="text-sm font-medium text-slate-700 cursor-pointer">
             This company is GST/VAT Compliant
           </label>
         </div>
@@ -158,25 +184,35 @@ const AddCompanyModal = ({ isOpen, onClose }) => {
           />
         </div>
 
-        <div className="flex justify-end gap-3 mt-6">
-          <button 
+        <div className="flex justify-between gap-3 mt-6 pt-4 border-t border-slate-100">
+           <button 
             type="button" 
-            onClick={onClose}
-            className="px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+            onClick={handleDelete}
+            className="px-4 py-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors flex items-center gap-2"
           >
-            Cancel
+            <Trash2 size={16} /> Delete Company
           </button>
-          <button 
-            type="submit" 
-            disabled={loading}
-            className="px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors"
-          >
-            {loading ? 'Creating...' : 'Create Company'}
-          </button>
+
+          <div className="flex gap-3">
+            <button 
+              type="button" 
+              onClick={onClose}
+              className="px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition-colors"
+            >
+              {loading ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
         </div>
       </form>
     </Modal>
   );
 };
 
-export default AddCompanyModal;
+export default EditCompanyModal;

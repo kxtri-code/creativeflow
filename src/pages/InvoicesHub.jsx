@@ -10,6 +10,15 @@ const InvoicesHub = () => {
   const [form, setForm] = useState({ client: '', project: '', due: '', tax: 0 });
   const [invoices, setInvoices] = useState([]);
 
+  // Auto-set tax based on Company GST status
+  useEffect(() => {
+    if (currentCompany?.isGST) {
+      setForm(prev => ({ ...prev, tax: currentCompany.taxRate || 18 }));
+    } else {
+      setForm(prev => ({ ...prev, tax: 0 }));
+    }
+  }, [currentCompany]);
+
   // Load invoices from localStorage
   useEffect(() => {
     const stored = localStorage.getItem('invoices_data');

@@ -23,34 +23,37 @@ export const AuthProvider = ({ children }) => {
   ];
 
   useEffect(() => {
+    // Always load companies from localStorage to ensure persistence (works for both Demo and "Offline" modes)
+    try {
+      const storedCompanies = localStorage.getItem('demo_companies');
+      const storedCurrentCompanyId = localStorage.getItem('demo_current_company_id');
+      
+      if (storedCompanies) {
+        const parsedCompanies = JSON.parse(storedCompanies);
+        setCompanies(parsedCompanies);
+        
+        if (storedCurrentCompanyId) {
+          const current = parsedCompanies.find(c => c.id === storedCurrentCompanyId);
+          setCurrentCompany(current || parsedCompanies[0]);
+        } else if (parsedCompanies.length > 0) {
+          setCurrentCompany(parsedCompanies[0]);
+        }
+      }
+    } catch (e) {
+      console.error("Error loading local company data", e);
+    }
+
     if (isDemoMode) {
-      // DEMO MODE: Load from localStorage
+      // DEMO MODE: Load User/Profile from localStorage
       try {
         const storedUser = localStorage.getItem('demo_user');
         const storedProfile = localStorage.getItem('demo_profile');
-        const storedCompanies = localStorage.getItem('demo_companies');
-        const storedCurrentCompanyId = localStorage.getItem('demo_current_company_id');
         const storedOrgName = localStorage.getItem('demo_org_name');
 
         if (storedUser) {
           setUser(JSON.parse(storedUser));
           if (storedProfile) setProfile(JSON.parse(storedProfile));
-          
-          if (storedOrgName) {
-            setOrgName(storedOrgName);
-          }
-          
-          if (storedCompanies) {
-            const parsedCompanies = JSON.parse(storedCompanies);
-            setCompanies(parsedCompanies);
-            
-            if (storedCurrentCompanyId) {
-              const current = parsedCompanies.find(c => c.id === storedCurrentCompanyId);
-              setCurrentCompany(current || parsedCompanies[0]);
-            } else if (parsedCompanies.length > 0) {
-              setCurrentCompany(parsedCompanies[0]);
-            }
-          }
+          if (storedOrgName) setOrgName(storedOrgName);
         }
       } catch (error) {
         console.error("Error loading demo data:", error);
@@ -65,7 +68,7 @@ export const AuthProvider = ({ children }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
         fetchProfile(session.user.id);
-        // Fetch companies here for real mode (omitted for now as requested features focus on functionality)
+        // Even in real mode, we might want to check local storage for company context if not synced yet
       } else {
         setLoading(false);
       }
@@ -86,11 +89,14 @@ export const AuthProvider = ({ children }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const createCompany = async (name, currencyCode) => {
+  const createCompany = async (name, currencyCode, isGST = false, gstNumber = '', address = '') => {
     const newCompany = {
       id: crypto.randomUUID(),
       name,
       currency: currencyCode,
+      isGST,
+      gstNumber,
+      address,
       createdAt: new Date().toISOString()
     };
 
@@ -98,10 +104,9 @@ export const AuthProvider = ({ children }) => {
     setCompanies(updatedCompanies);
     setCurrentCompany(newCompany);
 
-    if (isDemoMode) {
-      localStorage.setItem('demo_companies', JSON.stringify(updatedCompanies));
-      localStorage.setItem('demo_current_company_id', newCompany.id);
-    }
+    // Always save to localStorage for persistence
+    localStorage.setItem('demo_companies', JSON.stringify(updatedCompanies));
+    localStorage.setItem('demo_current_company_id', newCompany.id);
 
     return newCompany;
   };
@@ -110,9 +115,7 @@ export const AuthProvider = ({ children }) => {
     const company = companies.find(c => c.id === companyId);
     if (company) {
       setCurrentCompany(company);
-      if (isDemoMode) {
-        localStorage.setItem('demo_current_company_id', company.id);
-      }
+      localStorage.setItem('demo_current_company_id', company.id);
       addToast(`Switched to ${company.name}`, 'success');
     }
   };
@@ -253,6 +256,8 @@ export const AuthProvider = ({ children }) => {
       companies,
       currentCompany,
       createCompany,
+      updateCompany,
+      deleteCompany,
       switchCompany,
       formatCurrency,
       currencies,

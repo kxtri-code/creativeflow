@@ -39,7 +39,13 @@ const Onboarding = () => {
     setLoading(true);
     try {
       // Create the first company
-      await createCompany(formData.companyName, formData.currency);
+      await createCompany(
+        formData.companyName, 
+        formData.currency,
+        formData.isGST,
+        formData.gstNumber,
+        formData.address
+      );
       
       // Store Org name in localStorage for demo purposes (or update profile)
       localStorage.setItem('demo_org_name', formData.orgName);
@@ -140,41 +146,68 @@ const Onboarding = () => {
 
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">Company Name</label>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">Company Name</label>
                       <input 
                         type="text" 
-                        className="w-full p-4 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 outline-none text-lg"
-                        placeholder="e.g. Acme India Pvt Ltd"
+                        className="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/10 outline-none"
+                        placeholder="e.g. Acme Corp"
                         value={formData.companyName}
-                        onChange={(e) => setFormData({...formData, companyName: e.target.value})}
-                        autoFocus
+                        onChange={e => setFormData({...formData, companyName: e.target.value})}
                       />
                     </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">Currency</label>
+                      <select 
+                        className="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/10 outline-none"
+                        value={formData.currency}
+                        onChange={e => setFormData({...formData, currency: e.target.value})}
+                      >
+                        {currencies.map(c => (
+                          <option key={c.code} value={c.code}>{c.code} - {c.name}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="pt-2">
+                       <label className="flex items-center gap-2 cursor-pointer mb-2">
+                         <input 
+                           type="checkbox"
+                           className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300"
+                           checked={formData.isGST}
+                           onChange={e => setFormData({...formData, isGST: e.target.checked})}
+                         />
+                         <span className="text-sm font-medium text-slate-700">Is GST Compliant?</span>
+                       </label>
+                    </div>
+
+                    {formData.isGST && (
+                      <motion.div 
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        className="space-y-4"
+                      >
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 mb-1">GST Number</label>
+                          <input 
+                            type="text" 
+                            className="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/10 outline-none uppercase"
+                            value={formData.gstNumber}
+                            onChange={e => setFormData({...formData, gstNumber: e.target.value.toUpperCase()})}
+                            placeholder="e.g. 22AAAAA0000A1Z5"
+                          />
+                        </div>
+                      </motion.div>
+                    )}
 
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">Base Currency</label>
-                      <div className="grid grid-cols-2 gap-3">
-                        {currencies.map((curr) => (
-                          <button
-                            key={curr.code}
-                            type="button"
-                            onClick={() => setFormData({...formData, currency: curr.code})}
-                            className={`p-3 border rounded-xl flex items-center gap-3 transition-all ${
-                              formData.currency === curr.code 
-                                ? 'border-purple-600 bg-purple-50 text-purple-700' 
-                                : 'border-slate-200 hover:border-slate-300 text-slate-600'
-                            }`}
-                          >
-                            <span className="w-8 h-8 rounded-full bg-white flex items-center justify-center font-bold shadow-sm">
-                              {curr.symbol}
-                            </span>
-                            <div className="text-left">
-                              <div className="font-bold text-sm">{curr.code}</div>
-                              <div className="text-xs opacity-70">{curr.name}</div>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">Registered Address</label>
+                      <textarea 
+                        className="w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/10 outline-none resize-none h-20"
+                        value={formData.address}
+                        onChange={e => setFormData({...formData, address: e.target.value})}
+                        placeholder="Official billing address..."
+                      />
                     </div>
                   </div>
                 </motion.div>

@@ -75,27 +75,27 @@ const Sidebar = ({ isOpen, onClose }) => {
       )}
 
       <aside className={`
-        fixed left-0 top-0 h-screen bg-white/80 backdrop-blur-xl border-r border-slate-200 z-50 flex flex-col transition-transform duration-300
+        fixed left-0 top-0 h-screen bg-white/80 dark:bg-slate-900/90 backdrop-blur-xl border-r border-slate-200 dark:border-slate-800 z-50 flex flex-col transition-transform duration-300
         w-64
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0
       `}>
         
         {/* Company Switcher Header */}
-        <div className="relative h-20 flex items-center justify-between px-6 border-b border-slate-100 select-none">
+        <div className="relative h-20 flex items-center justify-between px-6 border-b border-slate-100 dark:border-slate-800 select-none">
           <div 
             onClick={() => setIsCompanyMenuOpen(!isCompanyMenuOpen)}
-            className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 p-2 -ml-2 rounded-xl transition-colors flex-1 min-w-0"
+            className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 p-2 -ml-2 rounded-xl transition-colors flex-1 min-w-0"
           >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/30 flex-shrink-0">
               {currentCompany ? currentCompany.name.substring(0, 2).toUpperCase() : 'CF'}
             </div>
             
             <div className="flex-1 min-w-0">
-              <div className="font-bold text-sm text-slate-900 truncate">
+              <div className="font-bold text-sm text-slate-900 dark:text-slate-100 truncate">
                 {currentCompany ? currentCompany.name : 'CreativeFlow'}
               </div>
-              <div className="text-xs text-slate-500 truncate">
+              <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
                 {currentCompany ? orgName : 'Select Company'}
               </div>
             </div>
@@ -118,7 +118,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                className="absolute top-full left-4 right-4 mt-2 bg-white rounded-xl shadow-xl border border-slate-100 p-2 z-50 w-56"
+                className="absolute top-full left-4 right-4 mt-2 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 p-2 z-50 w-56"
               >
                 <div className="text-xs font-semibold text-slate-400 px-2 py-1 mb-1">SWITCH COMPANY</div>
                 
@@ -133,7 +133,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                       className={`w-full flex items-center justify-between px-2 py-2 rounded-lg text-sm transition-colors ${
                         currentCompany?.id === company.id 
                           ? 'bg-primary/5 text-primary font-medium' 
-                          : 'text-slate-600 hover:bg-slate-50'
+                          : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
                       }`}
                     >
                       <div className="flex items-center gap-2 truncate">
@@ -145,14 +145,14 @@ const Sidebar = ({ isOpen, onClose }) => {
                   ))}
                 </div>
 
-                <div className="h-px bg-slate-100 my-2"></div>
+                <div className="h-px bg-slate-100 dark:bg-slate-700 my-2"></div>
 
                 <button
                   onClick={() => {
                     setIsAddCompanyModalOpen(true);
                     setIsCompanyMenuOpen(false);
                   }}
-                  className="w-full flex items-center gap-2 px-2 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-lg transition-colors"
+                  className="w-full flex items-center gap-2 px-2 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-slate-100 rounded-lg transition-colors"
                 >
                   <Plus size={14} />
                   <span>Create New Company</span>
@@ -175,7 +175,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 flex items-center gap-3 px-3 py-4 lg:py-3 rounded-xl transition-all duration-200 group
                 ${isActive 
                   ? 'bg-primary/10 text-primary font-semibold shadow-sm' 
-                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}
+                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100'}
               `}
             >
               <item.icon className="w-6 h-6 lg:w-5 lg:h-5 flex-shrink-0" />
@@ -184,7 +184,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-slate-100">
+        <div className="p-4 border-t border-slate-100 dark:border-slate-800">
           <button 
             onClick={toggleTheme}
             className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200 mb-2 ${
@@ -206,12 +206,12 @@ const Sidebar = ({ isOpen, onClose }) => {
           </button>
 
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden">
+            <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
               <img src={profile?.avatar_url || `https://ui-avatars.com/api/?name=${profile?.full_name || 'User'}&background=random`} alt="User" />
             </div>
             <div>
-              <div className="font-medium text-sm text-slate-900">{profile?.full_name || 'User'}</div>
-              <div className="text-xs text-slate-500 capitalize">{profile?.role || 'Guest'}</div>
+              <div className="font-medium text-sm text-slate-900 dark:text-slate-100">{profile?.full_name || 'User'}</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400 capitalize">{profile?.role || 'Guest'}</div>
             </div>
           </div>
         </div>

@@ -33,8 +33,8 @@ export const getGeminiModel = (modelName = "gemini-1.5-flash") => {
   try {
     return genAI.getGenerativeModel({ model: modelName });
   } catch (error) {
-    console.warn(`Model ${modelName} failed, falling back to gemini-pro`);
-    return genAI.getGenerativeModel({ model: "gemini-pro" });
+    console.warn(`Model ${modelName} failed, falling back to gemini-1.5-flash`);
+    return genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
   }
 };
 
@@ -69,7 +69,7 @@ export const generateJSON = async (prompt, schema) => {
       
       // Re-get model in case the previous one was the issue (though unlikely for same instance)
       // Ensure we are using a model that might work better for text if schema failed
-      model = getGeminiModel("gemini-pro"); 
+      model = getGeminiModel("gemini-1.5-flash"); 
 
       const result = await model.generateContent({
         contents: [{ role: "user", parts: [{ text: jsonPrompt }] }],

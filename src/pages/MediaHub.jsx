@@ -35,7 +35,7 @@ const MediaHub = () => {
               : 'border-transparent text-slate-500 hover:text-slate-700'
           }`}
         >
-          <LayoutKanban size={18} />
+          <Layout size={18} />
           Project Board
         </button>
         <button

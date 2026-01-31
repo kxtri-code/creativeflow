@@ -32,48 +32,41 @@ export const getGeminiModel = (modelName = "gemini-1.5-flash") => {
     throw new Error("Gemini API not initialized. Please check VITE_GEMINI_API_KEY in Vercel environment variables.");
   }
   
-  // Use the standard stable model (Gemini 1.5 Flash)
-  try {
-    return genAI.getGenerativeModel({ model: modelName });
-  } catch (error) {
-    console.warn(`Model ${modelName} failed, falling back to gemini-1.5-flash`);
-    return genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-  }
+  return genAI.getGenerativeModel({ model: modelName });
 };
 
-export const generateJSON = async (prompt, schema) => {
-  let model = getGeminiModel();
-  
-  try {
-    // Attempt 1: Try with structured output schema (Best for reliability)
-    try {
-      const result = await model.generateContent({
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: {
-          responseMimeType: "application/json",
-          responseSchema: schema,
-        },
-      });
-      let text = result.response.text();
-      return cleanJsonText(text);
-    } catch (schemaError) {
-       // If schema generation fails (e.g. model doesn't support it), fall back to text
-       console.warn("Schema generation failed, trying simple JSON mode", schemaError);
-       throw schemaError; 
-    }
+const MODELS_TO_TRY = ["gemini-1.5-flash", "gemini-1.5-flash-001", "gemini-pro"];
 
-  } catch (error) {
-    console.warn("Gemini structured output failed, retrying with simple JSON mode...", error);
-    
+export const generateJSON = async (prompt, schema) => {
+  let lastError = null;
+
+  for (const modelName of MODELS_TO_TRY) {
     try {
-      // Attempt 2: Fallback to simple JSON mode (Better compatibility)
-      // Append instruction to ensure JSON
+      console.log(`Attempting generation with model: ${modelName}`);
+      const model = getGeminiModel(modelName);
+      
+      // Attempt 1: Try with structured output schema (Best for reliability)
+      // Only 1.5 models support responseSchema well in all versions
+      if (modelName.includes("1.5")) {
+        try {
+          const result = await model.generateContent({
+            contents: [{ role: "user", parts: [{ text: prompt }] }],
+            generationConfig: {
+              responseMimeType: "application/json",
+              responseSchema: schema,
+            },
+          });
+          let text = result.response.text();
+          return cleanJsonText(text);
+        } catch (schemaError) {
+           console.warn(`Schema generation failed for ${modelName}, falling back to simple JSON mode`, schemaError);
+           // Continue to simple JSON mode below
+        }
+      }
+
+      // Attempt 2: Simple JSON mode (Better compatibility / Fallback)
       const jsonPrompt = `${prompt}\n\nIMPORTANT: Return only valid JSON adhering to the requested structure. Do not include markdown formatting.`;
       
-      // Re-get model in case the previous one was the issue (though unlikely for same instance)
-      // Ensure we are using a model that might work better for text if schema failed
-      model = getGeminiModel("gemini-1.5-flash"); 
-
       const result = await model.generateContent({
         contents: [{ role: "user", parts: [{ text: jsonPrompt }] }],
         generationConfig: {
@@ -83,12 +76,17 @@ export const generateJSON = async (prompt, schema) => {
 
       let text = result.response.text();
       return cleanJsonText(text);
-      
-    } catch (retryError) {
-      console.error("Gemini JSON generation failed completely:", retryError);
-      throw retryError;
+
+    } catch (error) {
+      console.warn(`Model ${modelName} failed completely, trying next model...`, error);
+      lastError = error;
+      // Continue loop to try next model
     }
   }
+
+  // If we get here, all models failed
+  console.error("All Gemini models failed to generate content.");
+  throw lastError || new Error("All Gemini models failed to generate content.");
 };
 
 const cleanJsonText = (text) => {

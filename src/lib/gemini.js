@@ -15,12 +15,13 @@ export const initializeGemini = (apiKey) => {
   }
 };
 
-export const getGeminiModel = (modelName = "gemini-2.0-flash") => {
+export const getGeminiModel = (modelName = "gemini-1.5-flash") => {
   if (!genAI) {
     // Auto-initialize if key is available in env
-    const key = import.meta.env.VITE_GEMINI_API_KEY;
+    let key = import.meta.env.VITE_GEMINI_API_KEY;
     
     if (key) {
+      key = key.trim(); // Sanitize key
       console.log(`Auto-initializing Gemini with env key (Length: ${key.length})`);
       initializeGemini(key);
     } else {
@@ -35,9 +36,12 @@ export const getGeminiModel = (modelName = "gemini-2.0-flash") => {
   return genAI.getGenerativeModel({ model: modelName });
 };
 
-// gemini-2.0-flash is the latest stable model
-// gemini-1.5-flash is kept as a fallback just in case
-const MODELS_TO_TRY = ["gemini-2.0-flash", "gemini-1.5-flash"];
+// Comprehensive fallback list covering all stable tiers
+const MODELS_TO_TRY = [
+  "gemini-1.5-flash", // Standard fast model
+  "gemini-1.5-pro",   // Standard capable model
+  "gemini-1.0-pro"    // Legacy stable model
+];
 
 export const generateJSON = async (prompt, schema) => {
   let lastError = null;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useToast } from '../context/ToastContext';
 import { useAuth } from '../context/AuthContext';
 import { useAI } from '../context/AIContext';
-import { generateText } from '../lib/gemini';
+import { generateText } from '../lib/openai';
 import { FileSignature, Wand2, Plus } from 'lucide-react';
 
 const ProposalsHub = () => {

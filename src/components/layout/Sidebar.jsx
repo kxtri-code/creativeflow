@@ -66,6 +66,26 @@ const Sidebar = ({ isOpen, onClose }) => {
   // Filter items based on RBAC
   const filteredNavItems = navItems.filter(item => hasAccess(item.roles));
 
+  // Group items
+  const navGroups = [
+    {
+      title: 'Overview',
+      items: filteredNavItems.filter(i => ['/'].includes(i.to))
+    },
+    {
+      title: 'Creative & Tech',
+      items: filteredNavItems.filter(i => ['/social', '/media', '/design', '/tech', '/content'].includes(i.to))
+    },
+    {
+      title: 'Business Ops',
+      items: filteredNavItems.filter(i => ['/projects', '/invoices', '/proposals', '/finance', '/ops'].includes(i.to))
+    },
+    {
+      title: 'Organization',
+      items: filteredNavItems.filter(i => ['/hr'].includes(i.to))
+    }
+  ];
+
   return (
     <>
       {/* Mobile Overlay */}
@@ -84,7 +104,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       `}>
         
         {/* Company Switcher Header */}
-        <div className="relative h-20 flex items-center justify-between px-6 border-b border-slate-100 dark:border-slate-800 select-none">
+        <div className="relative h-20 flex items-center justify-between px-6 border-b border-slate-100 dark:border-slate-800 select-none flex-shrink-0">
           <div 
             onClick={() => setIsCompanyMenuOpen(!isCompanyMenuOpen)}
             className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 p-2 -ml-2 rounded-xl transition-colors flex-1 min-w-0"
@@ -164,29 +184,40 @@ const Sidebar = ({ isOpen, onClose }) => {
           </AnimatePresence>
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-6 flex flex-col gap-2 px-3">
-          {filteredNavItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              onClick={() => {
-                // Close on mobile when clicked
-                if (window.innerWidth < 1024) onClose();
-              }}
-              className={({ isActive }) => `
-                flex items-center gap-3 px-3 py-4 lg:py-3 rounded-xl transition-all duration-200 group
-                ${isActive 
-                  ? 'bg-primary/10 text-primary font-semibold shadow-sm' 
-                  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100'}
-              `}
-            >
-              <item.icon className="w-6 h-6 lg:w-5 lg:h-5 flex-shrink-0" />
-              <span className="font-medium text-base lg:text-sm">{item.label}</span>
-            </NavLink>
+        <nav className="flex-1 overflow-y-auto py-6 flex flex-col gap-6 px-3 custom-scrollbar">
+          {navGroups.map((group, idx) => group.items.length > 0 && (
+            <div key={idx}>
+              {group.title && (
+                <div className="px-3 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  {group.title}
+                </div>
+              )}
+              <div className="space-y-1">
+                {group.items.map((item) => (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => {
+                      // Close on mobile when clicked
+                      if (window.innerWidth < 1024) onClose();
+                    }}
+                    className={({ isActive }) => `
+                      flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group
+                      ${isActive 
+                        ? 'bg-primary/10 text-primary font-semibold shadow-sm' 
+                        : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100'}
+                    `}
+                  >
+                    <item.icon className="w-5 h-5 flex-shrink-0" />
+                    <span className="font-medium text-sm">{item.label}</span>
+                  </NavLink>
+                ))}
+              </div>
+            </div>
           ))}
         </nav>
 
-        <div className="p-4 border-t border-slate-100 dark:border-slate-800">
+        <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex-shrink-0">
           <button 
             onClick={toggleTheme}
             className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200 mb-2 ${

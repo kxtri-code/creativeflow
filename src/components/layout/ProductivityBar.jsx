@@ -9,6 +9,8 @@ const ProductivityBar = ({ onMenuClick }) => {
   const { status, progress, clockIn, takeBreak, resumeFromBreak, clockOut, elapsedTime } = useProductivity();
   const { addToast } = useToast();
   const [showSummary, setShowSummary] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [welcomeData, setWelcomeData] = useState(null);
   const [summaryData, setSummaryData] = useState(null);
 
   const handleClockIn = () => {
@@ -36,7 +38,9 @@ const ProductivityBar = ({ onMenuClick }) => {
         localStorage.setItem('session_start_done_count', '0');
       }
       
-      addToast(`Welcome! Today's focus: ${suggestedTask}`, 'success');
+      setWelcomeData({ task: suggestedTask });
+      setShowWelcome(true);
+      // addToast(`Welcome! Today's focus: ${suggestedTask}`, 'success');
     } catch (e) {
       addToast('Productivity timer started!', 'success');
     }
@@ -172,6 +176,39 @@ const ProductivityBar = ({ onMenuClick }) => {
           </button>
         </div>
       </div>
+
+      <Modal
+        isOpen={showWelcome}
+        onClose={() => setShowWelcome(false)}
+        title="Welcome to Work!"
+        size="md"
+      >
+        <div className="text-center p-6 bg-indigo-50/50 rounded-2xl">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-indigo-100 text-indigo-600 mb-6 shadow-sm">
+            <Clock size={40} />
+          </div>
+          <h3 className="text-3xl font-bold text-slate-800 mb-2">Let's Get Started</h3>
+          <p className="text-slate-500 mb-8 text-lg">Your productivity timer is now running.</p>
+          
+          <div className="bg-white p-6 rounded-xl border border-indigo-100 shadow-sm text-left">
+            <div className="text-xs font-bold text-indigo-500 uppercase tracking-wider mb-2">Today's Priority</div>
+            <div className="flex items-start gap-3">
+              <CheckCircle className="text-emerald-500 mt-1 flex-shrink-0" size={24} />
+              <div>
+                <h4 className="text-xl font-bold text-slate-800">{welcomeData?.task}</h4>
+                <p className="text-slate-500 text-sm mt-1">Focus on this task to start your day strong.</p>
+              </div>
+            </div>
+          </div>
+
+          <button 
+            onClick={() => setShowWelcome(false)}
+            className="mt-8 w-full py-3 bg-indigo-600 text-white rounded-xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200"
+          >
+            Let's Go!
+          </button>
+        </div>
+      </Modal>
 
       <Modal
         isOpen={showSummary}

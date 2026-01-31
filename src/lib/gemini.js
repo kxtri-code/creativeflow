@@ -39,9 +39,7 @@ export const getGeminiModel = (modelName = "gemini-1.5-flash") => {
 // Comprehensive fallback list covering all stable tiers
 const MODELS_TO_TRY = [
   "gemini-1.5-flash",
-  "gemini-1.5-flash-001",
-  "gemini-1.5-pro",
-  "gemini-pro"
+  "gemini-1.5-pro"
 ];
 
 // Mock data generator for Demo Mode when API fails

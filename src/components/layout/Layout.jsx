@@ -7,7 +7,7 @@ const Layout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
       <Sidebar isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
       <div className="flex-1 w-full lg:w-auto lg:ml-64 flex flex-col min-w-0 transition-all duration-300">
         <ProductivityBar onMenuClick={() => setIsMobileMenuOpen(true)} />

@@ -35,17 +35,17 @@ const ProductivityBar = ({ onMenuClick }) => {
   };
 
   return (
-    <div className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30">
+    <div className="h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30 transition-colors duration-300">
       <div className="flex items-center gap-4 lg:gap-6">
         {/* Mobile Menu Button */}
         <button 
           onClick={onMenuClick}
-          className="lg:hidden p-3 -ml-2 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors"
+          className="lg:hidden p-3 -ml-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
         >
           <Menu size={24} />
         </button>
 
-        <h2 className="hidden lg:block text-sm font-semibold text-slate-500 uppercase tracking-wider">Productivity</h2>
+        <h2 className="hidden lg:block text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Productivity</h2>
         
         {/* Controls */}
         <div className="flex items-center gap-2">
@@ -60,7 +60,7 @@ const ProductivityBar = ({ onMenuClick }) => {
               <button onClick={handleBreak} className="flex items-center gap-2 px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium hover:bg-amber-600 transition-colors">
                 <Coffee size={16} /> Break
               </button>
-              <button onClick={handleClockOut} className="flex items-center gap-2 px-4 py-2 bg-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-300 transition-colors">
+              <button onClick={handleClockOut} className="flex items-center gap-2 px-4 py-2 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-lg text-sm font-medium hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
                 <Square size={16} /> Out
               </button>
             </>
@@ -73,18 +73,18 @@ const ProductivityBar = ({ onMenuClick }) => {
           )}
         </div>
 
-        <div className="hidden lg:block font-mono text-xl font-bold text-slate-700 w-24">
+        <div className="hidden lg:block font-mono text-xl font-bold text-slate-700 dark:text-slate-200 w-24">
           {formatTime(elapsedTime)}
         </div>
       </div>
 
       {/* Goal Tracking */}
       <div className="hidden md:block flex-1 max-w-xl mx-8">
-        <div className="flex justify-between text-xs mb-1 font-medium text-slate-500">
+        <div className="flex justify-between text-xs mb-1 font-medium text-slate-500 dark:text-slate-400">
           <span>Daily Goal</span>
           <span>{Math.round(progress)}%</span>
         </div>
-        <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
           <motion.div 
             className="h-full bg-gradient-to-r from-primary to-secondary"
             initial={{ width: 0 }}
@@ -97,7 +97,7 @@ const ProductivityBar = ({ onMenuClick }) => {
       <div className="flex items-center gap-4">
         <button 
           onClick={toggleFocus}
-          className="p-2 text-slate-400 hover:text-indigo-600 transition-colors" 
+          className="p-2 text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" 
           title="Focus Mode"
         >
           <Moon size={20} />

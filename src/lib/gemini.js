@@ -1,12 +1,12 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// Fallback key to ensure reliability
-const FALLBACK_KEY = 'AIzaSyDZM-aBy-SuR1E6_cj2IrqFhRLVdVUpy90';
-
 let genAI = null;
 
 export const initializeGemini = (apiKey) => {
-  if (!apiKey) return;
+  if (!apiKey) {
+    console.error("Initialize Gemini called with empty API Key");
+    return;
+  }
   try {
     genAI = new GoogleGenerativeAI(apiKey);
     console.log("Gemini API initialized successfully");
@@ -17,16 +17,19 @@ export const initializeGemini = (apiKey) => {
 
 export const getGeminiModel = (modelName = "gemini-1.5-flash") => {
   if (!genAI) {
-    // Auto-initialize if key is available in env or fallback
-    const key = import.meta.env.VITE_GEMINI_API_KEY || FALLBACK_KEY;
+    // Auto-initialize if key is available in env
+    const key = import.meta.env.VITE_GEMINI_API_KEY;
+    
     if (key) {
-      console.log("Auto-initializing Gemini with fallback/env key");
+      console.log(`Auto-initializing Gemini with env key (Length: ${key.length})`);
       initializeGemini(key);
+    } else {
+      console.error("VITE_GEMINI_API_KEY is missing from environment variables.");
     }
   }
 
   if (!genAI) {
-    throw new Error("Gemini API not initialized. Please provide an API key.");
+    throw new Error("Gemini API not initialized. Please check VITE_GEMINI_API_KEY in Vercel environment variables.");
   }
   
   // Use the standard stable model (Gemini 1.5 Flash)

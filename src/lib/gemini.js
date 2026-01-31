@@ -35,7 +35,9 @@ export const getGeminiModel = (modelName = "gemini-1.5-flash") => {
   return genAI.getGenerativeModel({ model: modelName });
 };
 
-const MODELS_TO_TRY = ["gemini-1.5-flash", "gemini-1.5-flash-001", "gemini-pro"];
+// Removed gemini-pro as it's deprecated/unavailable in v1beta for free tier in some regions
+// gemini-1.5-flash is the current standard for speed and cost
+const MODELS_TO_TRY = ["gemini-1.5-flash", "gemini-1.5-flash-001"];
 
 export const generateJSON = async (prompt, schema) => {
   let lastError = null;

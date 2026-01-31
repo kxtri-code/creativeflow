@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useAI } from '../../context/AIContext';
+import { useToast } from '../../context/ToastContext';
 import { generateJSON } from '../../lib/gemini';
 import { ShieldCheck, UploadCloud, AlertCircle, CheckCircle } from 'lucide-react';
 
 const BrandGuardian = ({ onUpload }) => {
   const { apiKey } = useAI();
+  const { addToast } = useToast();
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState(null);
 
@@ -22,7 +24,10 @@ const BrandGuardian = ({ onUpload }) => {
   };
 
   const startAnalysis = async () => {
-    if (!apiKey) return;
+    if (!apiKey) {
+      addToast('Please configure your Gemini API Key in AI Settings (Sidebar)', 'error');
+      return;
+    }
     
     setAnalyzing(true);
     setResult(null);

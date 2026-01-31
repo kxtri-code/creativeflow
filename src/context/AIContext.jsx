@@ -4,9 +4,7 @@ import { initializeGemini } from '../lib/gemini';
 const AIContext = createContext(null);
 
 export const AIProvider = ({ children }) => {
-  // Hardcoded key as fallback to ensure it works immediately
-  const PROVIDED_KEY = 'AIzaSyDZM-aBy-SuR1E6_cj2IrqFhRLVdVUpy90';
-  const envKey = import.meta.env.VITE_GEMINI_API_KEY || PROVIDED_KEY;
+  const envKey = import.meta.env.VITE_GEMINI_API_KEY;
   
   const [apiKey, setApiKey] = useState(envKey || localStorage.getItem('gemini_api_key') || '');
   const [isAuthorized, setIsAuthorized] = useState(!!(envKey || localStorage.getItem('gemini_api_key')));

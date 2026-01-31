@@ -140,12 +140,10 @@ export const generateJSON = async (prompt, schema) => {
     }
   }
 
-  // If we get here, all models failed. Return Mock Data instead of crashing.
-  console.error("All Gemini models failed. Switching to DEMO MODE (Mock Data).");
-  console.warn("Real error:", lastError);
-  
-  // Return mock data to keep the UI functional
-  return getMockResponseForPrompt(prompt);
+  // If we get here, all models failed.
+  console.error("All Gemini models failed.");
+  if (lastError) throw lastError;
+  throw new Error("Failed to connect to any Gemini model.");
 };
 
 const cleanJsonText = (text) => {
@@ -176,6 +174,7 @@ export const generateText = async (prompt) => {
     }
   }
   
-  console.error("All Gemini models failed. Switching to DEMO MODE (Mock Data).");
-  return "Simulated AI Response: The AI service is currently unavailable. This is a placeholder text to demonstrate the UI functionality. Please check your API Key and Model configuration.";
+  console.error("All Gemini models failed for text generation.");
+  if (lastError) throw lastError;
+  throw new Error("Failed to generate text.");
 };

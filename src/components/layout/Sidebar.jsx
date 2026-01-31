@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import AddCompanyModal from './AddCompanyModal';
+import ApiKeyModal from '../common/ApiKeyModal';
 import { 
   LayoutDashboard, 
   Share2, 
@@ -48,6 +49,7 @@ const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const [isCompanyMenuOpen, setIsCompanyMenuOpen] = useState(false);
   const [isAddCompanyModalOpen, setIsAddCompanyModalOpen] = useState(false);
+  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -198,6 +200,16 @@ const Sidebar = ({ isOpen, onClose }) => {
           </button>
 
           <button 
+            onClick={() => setIsApiKeyModalOpen(true)}
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors mb-2 group"
+          >
+            <div className="w-5 h-5 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-key"><path d="m21 2-2 2m-7.6 7.6a6 6 0 1 1-2.4-1.8l.8-.8m8.4-6.2a2 2 0 1 1-2.8 2.8c-.7.7-1.5 1.5-2.1 2.2l-1.4 1.4"/></svg>
+            </div>
+            <span className="font-medium">AI Settings</span>
+          </button>
+
+          <button 
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-rose-500 hover:bg-rose-50 hover:text-rose-600 transition-colors mb-4 group"
           >
@@ -220,6 +232,10 @@ const Sidebar = ({ isOpen, onClose }) => {
       <AddCompanyModal 
         isOpen={isAddCompanyModalOpen} 
         onClose={() => setIsAddCompanyModalOpen(false)} 
+      />
+      <ApiKeyModal 
+        isOpen={isApiKeyModalOpen} 
+        onClose={() => setIsApiKeyModalOpen(false)} 
       />
     </>
   );

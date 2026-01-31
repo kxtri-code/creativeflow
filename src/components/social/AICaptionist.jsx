@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useAI } from '../../context/AIContext';
+import { useToast } from '../../context/ToastContext';
 import { generateJSON } from '../../lib/gemini';
 import { Sparkles, Copy, Check, RefreshCw } from 'lucide-react';
 
 const AICaptionist = () => {
   const { apiKey } = useAI();
+  const { addToast } = useToast();
   const [topic, setTopic] = useState('');
   const [platform, setPlatform] = useState('Instagram');
   const [tone, setTone] = useState('Professional');
@@ -13,7 +15,12 @@ const AICaptionist = () => {
   const [copied, setCopied] = useState(false);
 
   const handleGenerate = async () => {
-    if (!apiKey || !topic) return;
+    if (!topic) return;
+
+    if (!apiKey) {
+      addToast('Please configure your Gemini API Key in AI Settings (Sidebar)', 'error');
+      return;
+    }
     
     setLoading(true);
     setResult(null);

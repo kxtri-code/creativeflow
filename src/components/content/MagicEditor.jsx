@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import { useAI } from '../../context/AIContext';
+import { useToast } from '../../context/ToastContext';
 import { generateJSON } from '../../lib/gemini';
 import { Wand2, RefreshCw, Check, ArrowRight } from 'lucide-react';
 
 const MagicEditor = () => {
   const { apiKey } = useAI();
+  const { addToast } = useToast();
   const [text, setText] = useState('');
   const [goal, setGoal] = useState('Improve Flow');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleMagic = async () => {
-    if (!apiKey || !text) return;
+    if (!text) return;
+    
+    if (!apiKey) {
+      addToast('Please configure your Gemini API Key in AI Settings (Sidebar)', 'error');
+      return;
+    }
     
     setLoading(true);
     setResult(null);
